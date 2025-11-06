@@ -1,31 +1,29 @@
-import Link from 'next/link';
-import { GAMES } from '../lib/catalog';
+// pages/index.tsx
+import Link from "next/link";
 
 export default function Home() {
-  return (
-    <main style={{ maxWidth: 800, margin: '40px auto', padding: '0 16px' }}>
-      <div style={{display:'flex', alignItems:'center', justifyContent:'center', gap:12, marginBottom:12}}>
-        <img src="/logo.png" alt="Fuesity" width={48} height={48} />
-        <h1 style={{ textAlign: 'center', margin: 0 }}>Fuesity — Game Shop</h1>
-      </div>
-      <p style={{ textAlign: 'center', marginTop: 0, color:'#444' }}>
-        Choose a game to see available bundles.
-      </p>
+  const cats = [
+    { slug: "brainrot", title: "Steal A Brainrot" },
+    { slug: "mm2", title: "Murder Mystery 2" },
+    { slug: "gtd", title: "Garden Tower Defense" },
+    { slug: "adoptme", title: "Adopt Me" },
+  ];
 
-      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(220px,1fr))', gap:16, marginTop:16}}>
-        {GAMES.map(g => (
-          <Link key={g.key} href={`/game/${g.key}`} style={{textDecoration:'none', color:'inherit'}}>
-            <div style={{border:'1px solid #ddd', borderRadius:8, padding:16}}>
-              <div style={{fontWeight:800, marginBottom:6}}>{g.name}</div>
-              <div style={{fontSize:12, color:'#666'}}>Tap to view bundles</div>
-            </div>
+  return (
+    <main className="min-h-screen bg-black text-white">
+      <header className="p-4 text-center text-2xl font-bold">fuesity</header>
+
+      <section className="px-4 pb-8 grid gap-4 max-w-md mx-auto">
+        {cats.map((c) => (
+          <Link
+            key={c.slug}
+            href={`/c/${c.slug}`}
+            className="rounded-2xl h-20 flex items-center justify-center text-lg font-semibold bg-neutral-900 border border-neutral-800 active:scale-[0.98] transition"
+          >
+            {c.title}
           </Link>
         ))}
-      </div>
-
-      <div style={{marginTop:28, fontSize:12, color:'#666', textAlign:'center'}}>
-        Need help? Join our Discord after checkout to confirm delivery. By purchasing, you agree to delivery within 24–72 hours and no refunds after delivery.
-      </div>
+      </section>
     </main>
   );
 }
