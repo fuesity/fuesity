@@ -1,3 +1,4 @@
+import React from "react";
 import Image from "next/image";
 
 export default function GTD() {
@@ -16,17 +17,17 @@ export default function GTD() {
       <h1 style={styles.title}>GTD Store</h1>
 
       <div style={styles.grid}>
-        {products.map((product) => (
-          <div key={product.name} style={styles.card}>
+        {products.map((p) => (
+          <div key={p.name} style={styles.card}>
             <Image
-              src={product.image}
-              alt={product.name}
+              src={p.image}
+              alt={p.name}
               width={300}
               height={300}
-              style={{ borderRadius: "10px" }}
+              style={{ borderRadius: 10 }}
             />
-            <p style={styles.text}>{product.name}</p>
-            <p style={styles.price}>${product.price}</p>
+            <p style={styles.text}>{p.name}</p>
+            <p style={styles.price}>${p.price}</p>
           </div>
         ))}
       </div>
@@ -34,7 +35,7 @@ export default function GTD() {
   );
 }
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
   container: {
     padding: "20px",
     textAlign: "center",
@@ -61,7 +62,7 @@ const styles = {
   text: {
     fontSize: "20px",
     marginTop: "10px",
-    fontWeight: "bold",
+    fontWeight: 700,
   },
   price: {
     color: "green",
