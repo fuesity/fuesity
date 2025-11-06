@@ -1,29 +1,41 @@
-// pages/index.tsx
 import Link from "next/link";
 
 export default function Home() {
-  const cats = [
-    { slug: "brainrot", title: "Steal A Brainrot" },
-    { slug: "mm2", title: "Murder Mystery 2" },
-    { slug: "gtd", title: "Garden Tower Defense" },
-    { slug: "adoptme", title: "Adopt Me" },
+  const categories = [
+    { name: "Steal A Brainrot", url: "/products/brainrot" },
+    { name: "Murder Mystery 2", url: "/products/mm2" },
+    { name: "Garden Tower Defense", url: "/products/gtd" },
+    { name: "Adopt Me", url: "/products/adoptme" },
   ];
 
   return (
-    <main className="min-h-screen bg-black text-white">
-      <header className="p-4 text-center text-2xl font-bold">fuesity</header>
+    <div style={{ fontFamily: "Arial", textAlign: "center", padding: "40px" }}>
+      <h1>Fuesity Store</h1>
+      <p>Select a category:</p>
 
-      <section className="px-4 pb-8 grid gap-4 max-w-md mx-auto">
-        {cats.map((c) => (
-          <Link
-            key={c.slug}
-            href={`/c/${c.slug}`}
-            className="rounded-2xl h-20 flex items-center justify-center text-lg font-semibold bg-neutral-900 border border-neutral-800 active:scale-[0.98] transition"
-          >
-            {c.title}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+        gap: "20px",
+        maxWidth: "900px",
+        margin: "auto",
+      }}>
+        {categories.map((c, i) => (
+          <Link key={i} href={c.url} style={{
+            display: "block",
+            border: "2px solid black",
+            padding: "40px 20px",
+            borderRadius: "12px",
+            fontSize: "20px",
+            background: "#f4f4f4",
+            textDecoration: "none",
+            color: "black",
+            fontWeight: "bold",
+          }}>
+            {c.name}
           </Link>
         ))}
-      </section>
-    </main>
+      </div>
+    </div>
   );
 }
