@@ -1,64 +1,99 @@
-import { useRouter } from "next/router";
-import Link from "next/link";
+// pages/products/gtd/[slug].tsx
+import { GetStaticPaths, GetStaticProps } from "next";
+import Head from "next/head";
 import Image from "next/image";
-import { CSSProperties } from "react";
-import { gtdProducts } from "@/lib/gtdProducts";
+import Link from "next/link";
+import { gtdProducts, type GtdProduct } from "@/lib/gtdProducts";
 
-const wrap: CSSProperties = { padding: "32px 20px", maxWidth: 980, margin: "0 auto", fontFamily: "Inter, system-ui, Arial" };
-const head: CSSProperties = { display: "flex", gap: 24, flexWrap: "wrap", alignItems: "flex-start" };
-const box: CSSProperties = { flex: "1 1 420px", border: "1px solid #eaeaea", borderRadius: 14, background: "#fff", overflow: "hidden",
-  boxShadow: "0 6px 16px rgba(0,0,0,0.06)" };
-const meta: CSSProperties = { flex: "1 1 300px" };
-const title: CSSProperties = { margin: "6px 0 10px", fontSize: 28, fontWeight: 800 };
-const price: CSSProperties = { color: "#0a7c2f", fontWeight: 800, fontSize: 22, marginBottom: 12 };
-const btnRow: CSSProperties = { display: "flex", gap: 12, flexWrap: "wrap" };
-const btn: CSSProperties = { padding: "10px 14px", borderRadius: 10, border: "1px solid #111", background: "#111", color: "#fff",
-  textDecoration: "none", fontWeight: 700 };
-const ghost: CSSProperties = { ...btn, background: "#fff", color: "#111" };
+type Props = { product: GtdProduct };
 
-export default function GtdItemPage() {
-  const { query } = useRouter();
-  const slug = String(query.slug || "");
-  const product = gtdProducts.find((p) => p.slug === slug);
-
-  if (!product) {
-    return (
-      <main style={wrap}>
-        <p>Not found.</p>
-        <Link href="/products/gtd">← Back to GTD</Link>
-      </main>
-    );
-  }
-
+export default function GtdProductPage({ product }: Props) {
   return (
-    <main style={wrap}>
-      <div style={head}>
-        <div style={box}>
+    <>
+      <Head>
+        <title>{product.name} | GTD Store</title>
+      </Head>
+
+      <main style={{ maxWidth: 900, margin: "40px auto", padding: "0 16px" }}>
+        <Link href="/products/gtd" style={{ textDecoration: "none" }}>
+          ← Back to GTD
+        </Link>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(280px, 1fr) 1fr",
+            gap: 24,
+            alignItems: "start",
+            marginTop: 16,
+          }}
+        >
           <Image
             src={product.img}
             alt={product.name}
-            width={1100}
-            height={1100}
-            style={{ width: "100%", height: "auto", display: "block" }}
+            width={800}
+            height={800}
+            style={{ width: "100%", height: "auto", borderRadius: 12 }}
             priority
           />
+
+          <section>
+            <h1 style={{ margin: "0 0 8px" }}>{product.name}</h1>
+            <div style={{ fontSize: 24, color: "#2e7d32", marginBottom: 16 }}>
+              ${product.price}
+            </div>
+
+            <p style={{ lineHeight: 1.6 }}>
+              Instant delivery after purchase. If you want a custom amount or
+              bundle, message me and I’ll set it up for you.
+            </p>
+
+            {/* Replace this with your real checkout flow when ready */}
+            <div style={{ display: "flex", gap: 12, marginTop: 18 }}>
+              <a
+                href="https://discord.com/users/your-handle" // <- your contact/checkout link
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: "inline-block",
+                  padding: "10px 16px",
+                  background: "#111",
+                  color: "#fff",
+                  borderRadius: 8,
+                }}
+              >
+                Buy / DM on Discord
+              </a>
+
+              <Link
+                href="/products/gtd"
+                style={{
+                  display: "inline-block",
+                  padding: "10px 16px",
+                  border: "1px solid #ddd",
+                  borderRadius: 8,
+                }}
+              >
+                Keep shopping
+              </Link>
+            </div>
+          </section>
         </div>
-
-        <div style={meta}>
-          <h1 style={title}>{product.name}</h1>
-          <div style={price}>${product.price}</div>
-
-          <p style={{ color: "#555", lineHeight: 1.6, marginBottom: 16 }}>
-            Fast delivery. Message your Roblox username after purchase. 24-hour delivery guarantee.
-          </p>
-
-          <div style={btnRow}>
-            {/* Hook this up to Stripe/checkout later */}
-            <a href="#" style={btn}>Buy Now</a>
-            <Link href="/products/gtd" style={ghost as CSSProperties}>Back to GTD</Link>
-          </div>
-        </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: gtdProducts.map((p) => ({ params: { slug: p.slug } })),
+    fallback: false, // 404 for unknown slugs
+  };
+};
+
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  const slug = params?.slug as string;
+  const product = gtdProducts.find((p) => p.slug === slug);
+  if (!product) return { notFound: true };
+  return { props: { product } };
+};
