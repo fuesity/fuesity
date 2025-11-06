@@ -1,72 +1,83 @@
 // pages/products/gtd/[slug].tsx
-import { GetStaticPaths, GetStaticProps } from "next";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { gtdProducts } from "../../../lib/gtdProducts";
 
-export default function GtdProductPage({ product }: { product: any }) {
+export default function GtdProductPage() {
+  const { query } = useRouter();
+  const slug = String(query.slug || "");
+  const product = gtdProducts.find((p) => p.slug === slug);
+
   return (
     <>
-      <Head>
-        <title>{product.name} | GTD Store</title>
-      </Head>
+      <Head><title>{product ? `${product.name} | GTD` : "GTD Item"}</title></Head>
 
-      <main
-        style={{
-          maxWidth: 800,
-          margin: "40px auto",
-          padding: "0 16px",
-          textAlign: "center",
-        }}
-      >
+      <main style={{ maxWidth: 900, margin: "40px auto", padding: "0 16px" }}>
         <Link href="/products/gtd" style={{ textDecoration: "none", color: "#555" }}>
-          ← Back to GTD Store
+          ← Back to GTD
         </Link>
 
-        <h1 style={{ marginTop: 20 }}>{product.name}</h1>
+        {!product ? (
+          <p style={{ marginTop: 20 }}>Loading… (If this doesn’t load, the slug might not match your data.)</p>
+        ) : (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(280px, 1fr) 1fr",
+            gap: 24, alignItems: "start", marginTop: 16
+          }}>
+            <Image
+              src={product.img}  // e.g. "/witchleaf.png"
+              alt={product.name}
+              width={800}
+              height={800}
+              style={{ width: "100%", height: "auto", borderRadius: 12 }}
+              priority
+            />
 
-        <Image
-          src={product.img}
-          alt={product.name}
-          width={800}
-          height={800}
-          style={{ width: "100%", height: "auto", borderRadius: 12, marginTop: 16 }}
-        />
+            <section>
+              <h1 style={{ margin: "0 0 8px" }}>{product.name}</h1>
+              <div style={{ fontSize: 24, color: "#2e7d32", marginBottom: 16 }}>${product.price}</div>
 
-        <p style={{ fontSize: 20, marginTop: 24 }}>
-          <strong>Price:</strong> ${product.price}
-        </p>
+              <p style={{ lineHeight: 1.6 }}>
+                Fast delivery. Message your username after purchase. 24-hour delivery guarantee.
+              </p>
 
-        <button
-          style={{
-            marginTop: 20,
-            background: "#2ecc71",
-            color: "#fff",
-            padding: "12px 20px",
-            border: "none",
-            borderRadius: 8,
-            fontSize: 16,
-            cursor: "pointer",
-          }}
-          onClick={() => alert("Checkout coming soon!")}
-        >
-          Buy Now
-        </button>
+              <div style={{ display: "flex", gap: 12, marginTop: 18 }}>
+                <a
+                  href="https://discord.com/users/your-handle"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    display: "inline-block",
+                    padding: "10px 16px",
+                    background: "#111",
+                    color: "#fff",
+                    borderRadius: 8,
+                    textDecoration: "none",
+                    fontWeight: 700,
+                  }}
+                >
+                  Buy / DM on Discord
+                </a>
+                <Link
+                  href="/products/gtd"
+                  style={{
+                    display: "inline-block",
+                    padding: "10px 16px",
+                    border: "1px solid #ddd",
+                    borderRadius: 8,
+                    textDecoration: "none",
+                  }}
+                >
+                  Keep shopping
+                </Link>
+              </div>
+            </section>
+          </div>
+        )}
       </main>
     </>
   );
 }
-
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: gtdProducts.map((p) => ({
-    params: { slug: p.slug },
-  })),
-  fallback: false,
-});
-
-export const getStaticProps: GetStaticProps = async ({ params }) => ({
-  props: {
-    product: gtdProducts.find((p) => p.slug === params?.slug),
-  },
-});
