@@ -2,7 +2,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { gtdProducts } from "../../lib/gtdProducts"; // path from /pages/products/gtd.tsx
+import { gtdProducts } from "../../lib/gtdProducts"; // ✅ correct path
 
 export default function GtdList() {
   return (
@@ -37,15 +37,18 @@ export default function GtdList() {
               }}
             >
               <Image
-                src={p.img}            // e.g. "/witchleaf.png"
+                src={p.img}
                 alt={p.name}
-                width={700}
-                height={700}
-                style={{ width: "100%", height: "auto", borderRadius: 10 }}
+                width={800}
+                height={800}
+                style={{ width: "100%", height: "auto", borderRadius: 12 }}
               />
+
               <div style={{ textAlign: "center", marginTop: 12 }}>
-                <div style={{ fontWeight: 600 }}>{p.name}</div>
-                <div style={{ color: "#2e7d32", marginTop: 4 }}>${p.price}</div>
+                <h3 style={{ margin: 0 }}>{p.name}</h3>
+                <div style={{ fontSize: 18, marginTop: 6, color: "#2ecc71" }}>
+                  ${p.price}
+                </div>
               </div>
             </Link>
           ))}
